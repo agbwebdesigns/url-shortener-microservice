@@ -29,13 +29,19 @@ app.get("/api/shorturl/1",(req,res) =>  {
 
 app.post("/api/shorturl",(req,res) =>  {
   console.log("request body: "+req.body.url);
-  try  {
   const inputURL= new URL(req.body.url);
-  console.log(inputURL);
-  app.locals.url=inputURL;
-  res.json({original_url:inputURL,short_url:newURL});
+  try  {
+  if (inputURL.protocol!='https:'&&inputURL.protocol!='http:')  {
+    console.log(inputURL);
+    console.log("not http or https: "+inputURL.protocol);
+    res.json({error:"Invalid URL"});
+  }else{
+    console.log(inputURL);
+    app.locals.url=inputURL;
+    res.json({original_url:inputURL,short_url:1});
+  }
   }catch(e)  {
-    res.json({error:"invalid url"});
+    res.json({error:"Invalid URL"});
   }
 })
 
